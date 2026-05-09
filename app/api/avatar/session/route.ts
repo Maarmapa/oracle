@@ -1,15 +1,14 @@
 import RunwayML from '@runwayml/sdk';
-import { tools } from '@/lib/tools';
 
 const client = new RunwayML();
 const ORACLE_AVATAR_ID = 'd1a78045-c103-4631-8602-92418bb04c2b';
 
 export async function POST() {
   try {
-    const { id: sessionId } = await client.realtimeSessions.create({
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const { id: sessionId } = await (client.realtimeSessions.create as any)({
       model: 'gwm1_avatars',
       avatar: { type: 'custom', avatarId: ORACLE_AVATAR_ID },
-      clientTools: tools,
     });
 
     let sessionKey: string | undefined;
