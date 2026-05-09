@@ -1,37 +1,54 @@
 import RunwayML from '@runwayml/sdk';
 import { tools } from '@/lib/tools';
 
-const client = new RunwayML({ apiKey: process.env.RUNWAYML_API_SECRET });
-
-// Your High Oracle avatar ID
+const client = new RunwayML();
 const ORACLE_AVATAR_ID = 'd1a78045-c103-4631-8602-92418bb04c2b';
 
-export async function POST() {
+export async function POST(request: Request) {
   try {
-    const session = await client.realtimeSessions.create({
+    const { id: sessionId } = await client.realtimeSessions.create({
       model: 'gwm1_avatars',
       avatar: { type: 'custom', avatarId: ORACLE_AVATAR_ID },
       tools,
     });
 
-    // Poll until ready
-    let ready = session;
-    for (let i = 0; i < 30; i++) {
-      if (ready.status === 'READY') break;
+    let sessionKey: string | undefined;
+    for (let i = 0; i < 60; i++) {
+      const session = await client.realtimeSessions.retrieve(sessionId);
+      if (session.status === 'READY') {
+        sessionKey = session.sessionKey;
+        break;
+      }
+      if (session.status === 'FAILED') {
+        return Response.json({ error: 'Session failed' }, { status: 500 });
+      }
       await new Promise(r => setTimeout(r, 1000));
-      ready = await client.realtimeSessions.retrieve(session.id);
     }
 
-    if (ready.status !== 'READY') {
-      return Response.json({ error: 'Session timeout' }, { status: 504 });
+    if (!sessionKey) {
+      return Response.json({ error: 'Session timed out' }, { status: 504 });
     }
+
+    const consumeResponse = await fetch(
+      `${client.baseURL}/v1/realtime_sessions/${sessionId}/consume`,
+      {
+        method: 'POST',
+        headers: {
+          Authorization: `Bearer ${sessionKey}`,
+          'X-Runway-Version': '2024-11-06',
+        },
+      }
+    );
+    const credentials = await consumeResponse.json();
 
     return Response.json({
-      sessionId: ready.id,
-      url: ready.url,
+      sessionId,
+      serverUrl: credentials.url,
+      token: credentials.token,
+      roomName: credentials.roomName,
     });
   } catch (err) {
     console.error(err);
-    return Response.json({ error: 'Failed to create session' }, { status: 500 });
+    return Response.json({ error: 'Failed' }, { status: 500 });
   }
 }
