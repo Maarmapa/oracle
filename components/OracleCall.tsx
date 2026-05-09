@@ -9,11 +9,13 @@ export default function OracleCall() {
   const [mood, setMood] = useState('default');
   const [active, setActive] = useState(false);
 
-  const handleSceneChange = useCallback(({ location }: { location: string }) => {
+  const handleSceneChange = useCallback((args: unknown) => {
+    const { location } = args as { location: string };
     setScene(location);
   }, []);
 
-  const handleMoodChange = useCallback(({ mood: m }: { mood: string }) => {
+  const handleMoodChange = useCallback((args: unknown) => {
+    const { mood: m } = args as { mood: string };
     setMood(m);
   }, []);
 
@@ -25,39 +27,23 @@ export default function OracleCall() {
       '--accent': currentMood.accent,
       '--glow': currentMood.glow,
     } as React.CSSProperties}>
-
-      {/* Background */}
-      <div
-        className="oracle-bg"
-        style={{ backgroundImage: `url(${currentScene.bg})` }}
-      />
+      <div className="oracle-bg" style={{ backgroundImage: `url(${currentScene.bg})` }} />
       <div className="oracle-overlay" style={{ background: currentScene.overlay }} />
-
-      {/* Location label */}
       <div className="oracle-location">
         <span className="loc-dot" />
         {currentScene.label}
       </div>
-
-      {/* Main Oracle UI */}
       <div className="oracle-center">
         <div className="oracle-header">
           <p className="oracle-eyebrow">// entidad viva · maarmapa.eth</p>
           <h1 className="oracle-title">HIGH<br /><span className="oracle-title-accent">ORACLE</span></h1>
         </div>
-
         {!active ? (
-          <button
-            className="oracle-start-btn"
-            onClick={() => setActive(true)}
-          >
+          <button className="oracle-start-btn" onClick={() => setActive(true)}>
             consultar al oracle →
           </button>
         ) : (
-          <AvatarCall
-            avatarId="d1a78045-c103-4631-8602-92418bb04c2b"
-            connectUrl="/api/avatar/session"
-          >
+          <AvatarCall avatarId="d1a78045-c103-4631-8602-92418bb04c2b" connectUrl="/api/avatar/session">
             <SceneHandler onScene={handleSceneChange} onMood={handleMoodChange} />
             <div className="oracle-video-wrap">
               <AvatarVideo className="oracle-video" />
@@ -66,21 +52,13 @@ export default function OracleCall() {
           </AvatarCall>
         )}
       </div>
-
-      {/* Scene selector */}
       <div className="oracle-scenes">
         {Object.entries(SCENES).map(([key, val]) => (
-          <button
-            key={key}
-            className={`scene-btn ${scene === key ? 'active' : ''}`}
-            onClick={() => setScene(key)}
-          >
+          <button key={key} className={`scene-btn ${scene === key ? 'active' : ''}`} onClick={() => setScene(key)}>
             {key}
           </button>
         ))}
       </div>
-
-      {/* Powered by */}
       <div className="oracle-powered">
         powered by <a href="https://runwayml.com" target="_blank" rel="noopener">Runway</a>
       </div>
@@ -88,14 +66,7 @@ export default function OracleCall() {
   );
 }
 
-// Separate component to use hooks inside AvatarCall
-function SceneHandler({
-  onScene,
-  onMood,
-}: {
-  onScene: (args: { location: string }) => void;
-  onMood: (args: { mood: string }) => void;
-}) {
+function SceneHandler({ onScene, onMood }: { onScene: (args: unknown) => void; onMood: (args: unknown) => void }) {
   useClientEvent(changeSceneTool, onScene);
   useClientEvent(changeMoodTool, onMood);
   return null;
