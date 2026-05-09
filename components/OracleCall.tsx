@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useCallback } from 'react';
+import { useState } from 'react';
 import { AvatarCall, AvatarVideo, ControlBar, useClientEvent } from '@runwayml/avatars-react';
 import { TOOL_NAMES, SCENES, MOODS } from '@/lib/tools';
 
@@ -43,7 +43,11 @@ export default function OracleCall() {
 }
 
 function ToolHandlers({ onScene, onMood }: { onScene: (s: string) => void; onMood: (m: string) => void }) {
-  useClientEvent(TOOL_NAMES.CHANGE_SCENE, (args) => { if (args?.location) onScene(args.location as string); });
-  useClientEvent(TOOL_NAMES.CHANGE_MOOD, (args) => { if (args?.mood) onMood(args.mood as string); });
+  useClientEvent(TOOL_NAMES.CHANGE_SCENE, (args: { location: string }) => {
+    if (args?.location) onScene(args.location);
+  });
+  useClientEvent(TOOL_NAMES.CHANGE_MOOD, (args: { mood: string }) => {
+    if (args?.mood) onMood(args.mood);
+  });
   return null;
 }
