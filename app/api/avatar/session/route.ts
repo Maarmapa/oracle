@@ -28,9 +28,9 @@ export async function POST() {
     const credentials = await consumeRes.json();
     console.log('credentials:', JSON.stringify(credentials));
 
-    return Response.json(credentials);
-  } catch (err) {
-    console.error(err);
-    return Response.json({ error: 'Failed' }, { status: 500 });
-  }
+    return Response.json({
+  serverUrl: credentials.url,
+  token: credentials.token,
+  roomName: credentials.roomName,
+});
 }
