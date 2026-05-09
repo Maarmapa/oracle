@@ -1,5 +1,9 @@
 [functions]
+  node_bundler = "esbuild"
   included_files = ["app/api/**"]
+
+[functions."api/avatar/session"]
+  timeout = 60
 
 [build]
   command = "npm run build"
