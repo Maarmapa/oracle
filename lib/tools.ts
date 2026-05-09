@@ -1,23 +1,34 @@
-import { clientTool, type ClientEventsFrom } from '@runwayml/avatars-react/api';
-import { z } from 'zod';
+export const TOOL_NAMES = {
+  CHANGE_SCENE: 'change_scene',
+  CHANGE_MOOD: 'change_mood',
+} as const;
 
-export const changeSceneTool = clientTool('change_scene', {
-  description: `Change the Oracle's background to a different location at height. 
-  Available: berlin, tokyo, santiago, everest, dubai, nyc`,
-  schema: z.object({
-    location: z.enum(['berlin', 'tokyo', 'santiago', 'everest', 'dubai', 'nyc']),
-  })['~standard'],
-});
-
-export const changeMoodTool = clientTool('change_mood', {
-  description: `Shift the Oracle's visual mood. Available: default, prophecy, warning, transcendent`,
-  schema: z.object({
-    mood: z.enum(['default', 'prophecy', 'warning', 'transcendent']),
-  })['~standard'],
-});
-
-export const tools = [changeSceneTool, changeMoodTool];
-export type AppEvents = ClientEventsFrom<typeof tools>;
+export const tools = [
+  {
+    type: 'client' as const,
+    name: TOOL_NAMES.CHANGE_SCENE,
+    description: "Change the Oracle's background location. Available: berlin, tokyo, santiago, everest, dubai, nyc",
+    parameters: {
+      type: 'object',
+      properties: {
+        location: { type: 'string', enum: ['berlin', 'tokyo', 'santiago', 'everest', 'dubai', 'nyc'] },
+      },
+      required: ['location'],
+    },
+  },
+  {
+    type: 'client' as const,
+    name: TOOL_NAMES.CHANGE_MOOD,
+    description: "Shift the Oracle's visual mood. Available: default, prophecy, warning, transcendent",
+    parameters: {
+      type: 'object',
+      properties: {
+        mood: { type: 'string', enum: ['default', 'prophecy', 'warning', 'transcendent'] },
+      },
+      required: ['mood'],
+    },
+  },
+];
 
 export const SCENES: Record<string, { label: string; bg: string; overlay: string }> = {
   berlin:   { label: 'Berlin — Torre de TV', bg: 'https://images.unsplash.com/photo-1560969184-10fe8719e047?w=1600&q=80', overlay: 'rgba(10,10,10,0.55)' },

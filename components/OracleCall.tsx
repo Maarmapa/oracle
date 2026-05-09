@@ -2,72 +2,48 @@
 
 import { useState, useCallback } from 'react';
 import { AvatarCall, AvatarVideo, ControlBar, useClientEvent } from '@runwayml/avatars-react';
-import { changeSceneTool, changeMoodTool, SCENES, MOODS } from '@/lib/tools';
+import { TOOL_NAMES, SCENES, MOODS } from '@/lib/tools';
 
 export default function OracleCall() {
   const [scene, setScene] = useState('berlin');
   const [mood, setMood] = useState('default');
   const [active, setActive] = useState(false);
 
-  const handleSceneChange = useCallback((args: unknown) => {
-    const { location } = args as { location: string };
-    setScene(location);
-  }, []);
-
-  const handleMoodChange = useCallback((args: unknown) => {
-    const { mood: m } = args as { mood: string };
-    setMood(m);
-  }, []);
-
   const currentScene = SCENES[scene];
   const currentMood = MOODS[mood];
 
   return (
-    <div className="oracle-wrapper" style={{
-      '--accent': currentMood.accent,
-      '--glow': currentMood.glow,
-    } as React.CSSProperties}>
+    <div className="oracle-wrapper" style={{ '--accent': currentMood.accent, '--glow': currentMood.glow } as React.CSSProperties}>
       <div className="oracle-bg" style={{ backgroundImage: `url(${currentScene.bg})` }} />
       <div className="oracle-overlay" style={{ background: currentScene.overlay }} />
-      <div className="oracle-location">
-        <span className="loc-dot" />
-        {currentScene.label}
-      </div>
+      <div className="oracle-location"><span className="loc-dot" />{currentScene.label}</div>
       <div className="oracle-center">
         <div className="oracle-header">
           <p className="oracle-eyebrow">// entidad viva · maarmapa.eth</p>
           <h1 className="oracle-title">HIGH<br /><span className="oracle-title-accent">ORACLE</span></h1>
         </div>
         {!active ? (
-          <button className="oracle-start-btn" onClick={() => setActive(true)}>
-            consultar al oracle →
-          </button>
+          <button className="oracle-start-btn" onClick={() => setActive(true)}>consultar al oracle →</button>
         ) : (
           <AvatarCall avatarId="d1a78045-c103-4631-8602-92418bb04c2b" connectUrl="/api/avatar/session">
-            <SceneHandler onScene={handleSceneChange} onMood={handleMoodChange} />
-            <div className="oracle-video-wrap">
-              <AvatarVideo className="oracle-video" />
-            </div>
+            <ToolHandlers onScene={setScene} onMood={setMood} />
+            <div className="oracle-video-wrap"><AvatarVideo className="oracle-video" /></div>
             <ControlBar className="oracle-controls" />
           </AvatarCall>
         )}
       </div>
       <div className="oracle-scenes">
-        {Object.entries(SCENES).map(([key, val]) => (
-          <button key={key} className={`scene-btn ${scene === key ? 'active' : ''}`} onClick={() => setScene(key)}>
-            {key}
-          </button>
+        {Object.entries(SCENES).map(([key]) => (
+          <button key={key} className={`scene-btn ${scene === key ? 'active' : ''}`} onClick={() => setScene(key)}>{key}</button>
         ))}
       </div>
-      <div className="oracle-powered">
-        powered by <a href="https://runwayml.com" target="_blank" rel="noopener">Runway</a>
-      </div>
+      <div className="oracle-powered">powered by <a href="https://runwayml.com" target="_blank" rel="noopener">Runway</a></div>
     </div>
   );
 }
 
-function SceneHandler({ onScene, onMood }: { onScene: (args: unknown) => void; onMood: (args: unknown) => void }) {
-  useClientEvent(changeSceneTool, onScene);
-  useClientEvent(changeMoodTool, onMood);
+function ToolHandlers({ onScene, onMood }: { onScene: (s: string) => void; onMood: (m: string) => void }) {
+  useClientEvent(TOOL_NAMES.CHANGE_SCENE, (args) => { if (args?.location) onScene(args.location as string); });
+  useClientEvent(TOOL_NAMES.CHANGE_MOOD, (args) => { if (args?.mood) onMood(args.mood as string); });
   return null;
 }
