@@ -22,7 +22,7 @@ export async function POST() {
 
     const consumeRes = await fetch(
       `https://api.dev.runwayml.com/v1/realtime_sessions/${sessionId}/consume`,
-      { method: 'POST', headers: { Authorization: `Bearer ${sessionKey}`, 'X-Runway-Version': '2024-11-06' } }
+      { method: "POST", headers: { "Content-Type": "application/json", Authorization: `Bearer ${sessionKey}`, 'X-Runway-Version': '2024-11-06' } }
     );
 
     const credentials = await consumeRes.json();
