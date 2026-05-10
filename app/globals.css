@@ -209,3 +209,12 @@ body::before {
   object-fit: cover !important;
   object-position: center top !important;
 }
+
+/* Fix left offset */
+.oracle-video-wrap {
+  margin-left: auto !important;
+  margin-right: auto !important;
+  left: 0 !important;
+  right: 0 !important;
+  position: relative !important;
+}
