@@ -22,7 +22,6 @@ body {
   font-family: var(--fm);
 }
 
-/* scanlines */
 body::before {
   content: '';
   position: fixed; inset: 0; z-index: 9999;
@@ -39,22 +38,33 @@ body::before {
   overflow: hidden;
 }
 
-/* ── BACKGROUND ── */
+/* ── VIDEO BACKGROUND FULLSCREEN ── */
+.oracle-bg-video {
+  position: fixed;
+  top: 0; left: 0;
+  width: 100vw; height: 100vh;
+  object-fit: cover;
+  object-position: center;
+  filter: brightness(0.55) saturate(0.85);
+  z-index: 0;
+}
+
 .oracle-bg {
-  position: absolute; inset: 0;
+  position: fixed; inset: 0;
   background-size: cover; background-position: center;
-  transition: background-image 1s ease;
   filter: brightness(0.6) saturate(0.8);
+  z-index: 0;
 }
 
 .oracle-overlay {
-  position: absolute; inset: 0;
+  position: fixed; inset: 0;
+  z-index: 1;
   transition: background 1s ease;
 }
 
 /* ── LOCATION ── */
 .oracle-location {
-  position: absolute; top: 24px; left: 24px;
+  position: fixed; top: 24px; left: 24px;
   font-size: 10px; letter-spacing: .15em; text-transform: uppercase;
   color: var(--dim); display: flex; align-items: center; gap: 8px;
   z-index: 10;
@@ -70,11 +80,13 @@ body::before {
 /* ── CENTER ── */
 .oracle-center {
   position: relative; z-index: 10;
-  display: flex; flex-direction: column; align-items: center;
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
   gap: 32px; text-align: center;
+  width: 100%;
 }
 
-.oracle-header { display: flex; flex-direction: column; gap: 8px; }
+.oracle-header { display: flex; flex-direction: column; gap: 8px; align-items: center; }
 
 .oracle-eyebrow {
   font-size: 10px; letter-spacing: .2em; text-transform: uppercase;
@@ -113,30 +125,41 @@ body::before {
   box-shadow: 0 0 40px var(--glow);
 }
 
-/* ── VIDEO ── */
+/* ── CHARACTER VIDEO ── */
 .oracle-video-wrap {
-  width: min(420px, 80vw);
+  width: min(380px, 85vw);
   aspect-ratio: 9/16;
-  border: 1px solid rgba(255,255,255,.1);
+  border: 1px solid rgba(255,255,255,.15);
   overflow: hidden;
   box-shadow: 0 0 60px var(--glow);
   transition: box-shadow .8s;
+  margin: 0 auto;
+  position: relative;
+}
+
+.oracle-video-wrap > * {
+  width: 100% !important;
+  height: 100% !important;
 }
 
 .oracle-video {
-  width: 100%; height: 100%;
-  object-fit: cover;
+  width: 100% !important;
+  height: 100% !important;
+  object-fit: cover !important;
+  object-position: center top !important;
+  display: block !important;
 }
 
 /* ── CONTROLS ── */
 .oracle-controls {
   display: flex; gap: 12px; justify-content: center;
-  margin-top: 16px;
+  margin-top: 8px;
+  position: relative; z-index: 10;
 }
 
 /* ── SCENE SELECTOR ── */
 .oracle-scenes {
-  position: absolute; bottom: 24px; left: 50%;
+  position: fixed; bottom: 24px; left: 50%;
   transform: translateX(-50%);
   display: flex; gap: 8px;
   z-index: 10;
@@ -160,29 +183,9 @@ body::before {
 
 /* ── POWERED BY ── */
 .oracle-powered {
-  position: absolute; bottom: 24px; right: 24px;
+  position: fixed; bottom: 24px; right: 24px;
   font-size: 9px; letter-spacing: .1em; color: rgba(255,255,255,.2);
   z-index: 10;
 }
 .oracle-powered a { color: inherit; text-decoration: none; }
 .oracle-powered a:hover { color: var(--white); }
-
-/* Force center AvatarCall */
-.oracle-video-wrap > div,
-.oracle-video-wrap > div > div {
-  width: 100% !important;
-  height: 100% !important;
-  display: flex !important;
-  align-items: center !important;
-  justify-content: center !important;
-}
-
-/* Remove rectangle, go full centered */
-.oracle-video-wrap {
-  width: min(400px, 90vw) !important;
-  aspect-ratio: 9/16 !important;
-  border-radius: 12px !important;
-  overflow: hidden !important;
-  margin: 0 auto !important;
-  position: relative !important;
-}
