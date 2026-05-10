@@ -166,3 +166,23 @@ body::before {
 }
 .oracle-powered a { color: inherit; text-decoration: none; }
 .oracle-powered a:hover { color: var(--white); }
+
+/* Force center AvatarCall */
+.oracle-video-wrap > div,
+.oracle-video-wrap > div > div {
+  width: 100% !important;
+  height: 100% !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+}
+
+/* Remove rectangle, go full centered */
+.oracle-video-wrap {
+  width: min(400px, 90vw) !important;
+  aspect-ratio: 9/16 !important;
+  border-radius: 12px !important;
+  overflow: hidden !important;
+  margin: 0 auto !important;
+  position: relative !important;
+}

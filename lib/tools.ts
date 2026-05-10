@@ -31,7 +31,7 @@ export const tools = [
 ];
 
 export const SCENES: Record<string, { label: string; bg: string; video?: string; overlay: string }> = {
-  berlin:  { label: 'Berlin — Fernsehturm', video: 'https://pub-07910030472648618f97bdbf5bdbca01.r2.dev/WhatsApp%20Video%202026-05-10%20at%2010.52.16%20AM.mp4', bg: 'https://images.unsplash.com/photo-1560969184-10fe8719e047?w=1600&q=80', overlay: 'rgba(10,10,10,0.45)' },
+  berlin:  { label: 'Berlin — Fernsehturm', video: 'https://pub-07910030472648618f97bdbf5bddca01.r2.dev/WhatsApp%20Video%202026-05-10%20at%2010.52.16%20AM.mp4', bg: 'https://images.unsplash.com/photo-1560969184-10fe8719e047?w=1600&q=80', overlay: 'rgba(10,10,10,0.45)' },
   tokyo:   { label: 'Tokyo — Tokyo Tower', bg: 'https://images.unsplash.com/photo-1540959733332-eab4deabeeaf?w=1600&q=80', overlay: 'rgba(10,10,10,0.55)' },
   rio:     { label: 'Rio — Cristo Redentor', bg: 'https://images.unsplash.com/photo-1483729558449-99ef09a8c325?w=1600&q=80', overlay: 'rgba(10,10,10,0.55)' },
   everest: { label: 'Everest — Base Camp', bg: 'https://images.unsplash.com/photo-1526772662000-3f88f10405ff?w=1600&q=80', overlay: 'rgba(10,10,10,0.6)' },
